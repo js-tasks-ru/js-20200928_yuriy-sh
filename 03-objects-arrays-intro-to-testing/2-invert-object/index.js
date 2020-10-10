@@ -5,10 +5,10 @@
  */
 export function invertObj(obj) {
     if (obj === undefined) {
-        return undefined;
+        return;
     };
 
-    let result = {};
+    const result = {};
     for (const [key, value] of Object.entries(obj)) {
         result[value] = key;
     }
