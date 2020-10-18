@@ -6,11 +6,8 @@ export default class SortableTable {
     constructor(header, {data}){
         this.header = header;
         header.forEach( item => {
-            if (item.template) {
-                return this.columns.push([item.id, item.template]);
-            } else {
-                return this.columns.push(item.id);
-            }
+            const column = (item.template) ? [item.id, item.template] : item.id;
+            return this.columns.push(column);
         });
         this.data = data;
 
@@ -29,14 +26,13 @@ export default class SortableTable {
     createHeader(){
         return `
             <div class="sortable-table__header sortable-table__row">
-                ${this.header.reduce((previosValue, column) => {
-                    return `${previosValue}
+                ${this.header.map( (column) => {
+                    return `
                         <div class="sortable-table__cell" data-id="${column.id}" data-sortable="${column.sortable}">
                             <span>${column.title}</span>
                         </div>
                        `
-            }, '')
-                }
+                }).join('')}
             </div>
         `
     }
@@ -103,16 +99,16 @@ export default class SortableTable {
             return;
         }
 
+        function check(first, second) {
+            if (sortType === 'string'){
+                return first[fieldValue].localeCompare(second[fieldValue], ['ru', 'en'], {caseFirst: 'upper'});
+            } else if (sortType === 'number'){
+                return first[fieldValue] - second[fieldValue];
+            }
+        }
+
         const div = document.createElement('div');
         div.innerHTML = this.createBody([...this.data].sort( (first, second) => {
-            function check(first, second) {
-                if (sortType === 'string'){
-                    return first[fieldValue].localeCompare(second[fieldValue], ['ru', 'en'], {caseFirst: 'upper'});
-                } else if (sortType === 'number'){
-                    return first[fieldValue] - second[fieldValue];
-                }
-            }
-
             if (orderValue === 'asc') {
                 return check(first, second);
             } else if (orderValue === 'desc') {

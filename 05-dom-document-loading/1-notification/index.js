@@ -1,6 +1,6 @@
 export default class NotificationMessage {
     element;
-    hasMessage;
+    static hasMessage;
 
     constructor(text, {duration = 1000, type = 'success'} = {}){
         this.text = text;
@@ -58,14 +58,11 @@ export default class NotificationMessage {
         parentEl.append(this.element);                
         NotificationMessage.hasMessage = true;
 
-        setTimeout(this.remove, this.duration, this.element);        
+        setTimeout(this.remove.bind(this), this.duration);
     }
 
-    remove(thisEl){
-        if (thisEl){
-            thisEl.remove();
-            thisEl = null;
-        } else if (this.element) {
+    remove(){
+        if (this.element) {
             this.element.remove();
             this.element = null;
         }
