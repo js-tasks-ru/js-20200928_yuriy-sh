@@ -191,4 +191,3 @@ export default class SortableTable {
         removeEventListener('click', this.clickColumn);
     }
 }
-
